@@ -1,4 +1,69 @@
+import numpy as np
+import pandas as pd
 
+
+
+#les fonctions de pretraitement 
+
+def convert_results(target : int)->int:
+    if target == 0:
+        return -1
+    if target == 1:
+        return 1
+    else:
+        raise ValueError('Mauvaise donnée: ' + target)
+    
+def convert_data(df:DataFrame)->list:
+    r = []
+    for index,line in df.iterrows():
+        obs = [
+            float(line['age']),
+            float(line['sex']),
+            float(line['cp']),
+            float(line['trestbps']),
+            float(line['chol']),
+            float(line['fbs']),
+            float(line['restecg']),
+            float(line['thalach']),
+            float(line['exang']),
+            float(line['oldpeak']),
+            float(line['slope']),
+            float(line['ca']),
+            float(line['thal']),
+            convert_results(line['target'])
+        ]
+        r.append(obs)
+    return r
+
+def get_data():
+    #Importation(chargement) des données depuis le .csv:
+    df = pd.read_csv('dataset.csv')
+
+    #visualisation de l'entete:
+    print("entete du dataframe \n", df.head())
+
+    #transformation du dataframe en tableau numpy pour faciliter son utilisation
+    data = np.array(convert_data(df))
+   
+
+    #séparation des entrées et des sortie:
+    np.random.shuffle(data)
+    number_of_lines , number_of_columns = data.shape
+    X = data[:,:(number_of_columns-1)]
+    Y = data[:, (number_of_columns-1):]
+
+    #Normalisation:
+    mean = X.mean(axis = 0)
+    std = X.std(axis = 0)
+    X = (X-mean) / std
+
+    #Separation des données en partie entrainement et partie test:
+    train_X = X[:(round(0.8*number_of_lines)),:]
+    train_Y = Y[:(round(0.8*number_of_lines)),:]
+    test_X = X[(round(0.8*number_of_lines)):,:]
+    test_Y = Y[(round(0.8*number_of_lines)):,:] 
+
+    return train_X,train_Y,test_X,test_Y 
 
 
 
