@@ -1,6 +1,36 @@
 import numpy as np
 class SVM:
     
+    def __init__(self, w : list = None , b : float = None 
+                 ,regularisation_parameter :float = 0.01 ):
+        self.__w = w
+        self.__b = b
+        self.__regularisation_parameter = regularisation_parameter
+    
+    @property
+    def w(self) -> list:
+        return self.__w
+    
+    @property
+    def b(self) -> float:
+        return self.__b
+    
+    @property
+    def regularisation_parameter(self) -> float:
+        return self.__regularisation_parameter
+
+    @property
+    def set_w(self, w):
+        self.__w = w
+    
+    @property
+    def set_b(self, b : float):
+        self.__b = b
+    
+    def compute(self, x : list ) -> float:
+        return np.dot(x, self.w) - self.b
+    
+    
     def train(self, X : list, Y : list , number_of_iterations : int = 1000 
               , learning_rate : float = 0.01 ):
         number_of_lines, number_of_columns = X.shape
