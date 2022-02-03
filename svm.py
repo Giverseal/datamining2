@@ -49,6 +49,43 @@ class SVM:
                 self.__w =  self.w -  learning_rate * gradientW 
                 self.__b =  self.b - learning_rate * gradientB 
     
+    
+    def predict(self, x):
+        if( self.compute(x) >= 0 ):
+            return 1
+        else:
+            return -1
+
+    def test_success_rate(self,X,Y):    #exactitude
+        number_of_lines, number_of_columns = X.shape
+        success = 0
+        for i,x in enumerate(X):
+            if(self.predict(x) == Y[i]):
+                success = success + 1; 
+        return success/number_of_lines 
+
+    def precision(self,X,Y):
+        number_of_lines, number_of_columns = X.shape
+        tp = 0
+        tp_fp =0
+        for i,x in enumerate(X):
+            if(self.predict(x) == Y[i] == 1):
+                tp = tp + 1; 
+            if((self.predict(x) == Y[i] == 1) or ((self.predict(x) == 1)and (Y[i]== -1 ))):
+                tp_fp = tp_fp + 1
+        return tp/tp_fp 
+    
+    def rappel(self,X,Y): #rappel
+        number_of_lines, number_of_columns = X.shape
+        tp = 0
+        tp_fn =0
+        for i,x in enumerate(X):
+            if(self.predict(x) == Y[i] == 1):
+                tp = tp + 1; 
+            if((self.predict(x) == Y[i] == 1) or ((self.predict(x) == -1)and (Y[i]== 1 ))):
+                tp_fn = tp_fn + 1
+        return tp/tp_fn 
+    
     def cost(self, x: list, y: int) -> float:
         if( y * self.compute(x) >= 1):
             return 0
