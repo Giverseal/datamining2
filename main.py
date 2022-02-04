@@ -1,5 +1,9 @@
 import numpy as np
+from svm import SVM 
+from pandas.core.frame import DataFrame
 import pandas as pd
+import matplotlib.pyplot as plt
+
 
 
 
@@ -40,7 +44,8 @@ def get_data():
     df = pd.read_csv('dataset.csv')
 
     #visualisation de l'entete:
-    print("entete du dataframe \n", df.head())
+    print("\n entete du dataframe \n")
+    print(df.head())
 
     #transformation du dataframe en tableau numpy pour faciliter son utilisation
     data = np.array(convert_data(df))
@@ -106,3 +111,37 @@ def cross_validation(svm: SVM , svm2 : SVM , train_X:list , train_Y: list):
         print('Résultat de la validation croisée: Le modèle 1 est meilleur')
     else:
         print('Résultat de la validation croisée: Le modèle 2 est meilleur')
+
+
+def main():
+    train_X,train_Y,test_X,test_Y = get_data()
+
+    svm = SVM([0,0,0,0,0,0,0,0,0,0,0,0,0],0,1)
+    svm2 = SVM([0,0,0,0,0,0,0,0,0,0,0,0,0],0,0.01)   #regularisation parameter
+    
+    print("\nModel 1 : \n")
+    print("cout global avant entrainement =" , svm.global_cost(train_X,train_Y))
+    svm.train(train_X,train_Y)
+    print("exactitude= ",svm.test_success_rate(test_X,test_Y))
+    print("rappel= ",svm.rappel(test_X,test_Y))
+    print("precision = ",svm.precision(test_X,test_Y))
+    print("cout global apres entrainement =" , svm.global_cost(train_X,train_Y))
+    visualize_svm(svm,train_X,train_Y)
+
+    print("\nModel 2 : \n")
+    print("cout global avant entrainement =" , svm2.global_cost(train_X,train_Y))
+    svm2.train(train_X,train_Y)
+    print("exactitude= ",svm2.test_success_rate(test_X,test_Y))
+    print("rappel= ",svm2.rappel(test_X,test_Y))
+    print("precision = ",svm2.precision(test_X,test_Y))
+    print("cout global apres entrainement =" , svm2.global_cost(train_X,train_Y))
+    visualize_svm(svm2,train_X,train_Y)
+
+    print("\nValidation croisé:\n")
+    cross_validation(svm , svm2 , train_X, train_Y)
+
+    
+
+
+if __name__ == "__main__":
+    main()
