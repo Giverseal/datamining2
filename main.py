@@ -113,6 +113,44 @@ def cross_validation(svm: SVM , svm2 : SVM , train_X:list , train_Y: list):
         print('Résultat de la validation croisée: Le modèle 2 est meilleur')
 
 
+def visualize_svm(clf,X,y):
+    #donne la valeur de l'hyperplan sur les deux dimentions choisie
+    def get_hyperplane_value(x, w, b, offset):
+        return (-w[0] * x + b + offset) / w[1]
+
+    #tracer le nuage de point
+    fig = plt.figure()
+    ax = fig.add_subplot(1, 1, 1)
+    plt.scatter(X[:, 0], X[:,1], marker="o", c=y)
+
+    x0_1 = np.amin(X[:, 0])
+    x0_2 = np.amax(X[:, 0])
+
+    #permet de tracer la droite du discriminant( svm)
+    x1_1 = get_hyperplane_value(x0_1, clf.w, clf.b, 0)
+    x1_2 = get_hyperplane_value(x0_2, clf.w, clf.b, 0)
+
+    #permet de tracer les droites paralelles au discriminant qui traversen les vecteurs de supports
+    x1_1_m = get_hyperplane_value(x0_1, clf.w, clf.b, -1)
+    x1_2_m = get_hyperplane_value(x0_2, clf.w, clf.b, -1)
+
+    x1_1_p = get_hyperplane_value(x0_1, clf.w, clf.b, 1)
+    x1_2_p = get_hyperplane_value(x0_2, clf.w, clf.b, 1)
+
+    #permet de dessiner les droites precedement cités
+    ax.plot([x0_1, x0_2], [x1_1, x1_2], "y--")
+    ax.plot([x0_1, x0_2], [x1_1_m, x1_2_m], "k")
+    ax.plot([x0_1, x0_2], [x1_1_p, x1_2_p], "k")
+
+    x1_min = np.amin(X[:, 1])
+    x1_max = np.amax(X[:, 1])
+
+    ax.set_ylim([x1_min - 3, x1_max + 3])
+
+    plt.show()
+    return 0
+
+    
 def main():
     train_X,train_Y,test_X,test_Y = get_data()
 
