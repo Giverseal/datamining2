@@ -1,4 +1,4 @@
-#Implementation d'un SVM
+# Implementation d'un SVM
 -implementation d'un SVM de zero (from scratch)   
 -biblioteques utilises:  
   matplotlib     
